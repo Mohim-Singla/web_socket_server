@@ -9,7 +9,6 @@ const log = debug("app:request");
  * @param {Express.Next} next 
  */
 export const debugLogger = (req, res, next) => {
-    console.log(process.env.DEBUG)
     log(`METHOD: ${req.method} | URL: ${req.url} | Timestamp: ${Date.now()}`);
     next();
 };

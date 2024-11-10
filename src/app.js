@@ -1,9 +1,10 @@
-import dotenv from 'dotenv';
-dotenv.config();
+import { serviceConfig } from './config/index.js';
+serviceConfig;
 import express from 'express';
 import { routeMap } from './route/index.js';
 import { responseHandler } from './middleware/responseHandler.js';
 import { debugLogger } from './middleware/debug.js';
+import { mongoConnection } from './db/mongo/connection/index.js';
 
 const app = express();
 
@@ -19,6 +20,8 @@ async function main () {
         app.use(debugLogger);
         app.use(responseHandler);
 
+        await mongoConnection.init();
+
         app.get('/ping', (req, res) => {
             return res.success('Server is working fine.', { timestamp: Date.now() });
         } )
@@ -29,7 +32,7 @@ async function main () {
                 throw error;
             }
             console.info('App is listenting on PORT:', PORT);
-        })
+        });
     } catch (error) {
         console.error(error);
         process.exit(1);
