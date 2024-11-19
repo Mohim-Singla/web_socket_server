@@ -6,29 +6,29 @@
  * @returns {Express.Response}
  */
 function successHandler(message, response, statusCode = 200) {
-    return this.status(statusCode).send({
-        status: 'Success',
-        message,
-        statusCode,
-        response,
-    });
+  return this.status(statusCode).send({
+    status: 'Success',
+    message,
+    statusCode,
+    response,
+  });
 }
 
 /**
  * Wrapper function to handle errored express requests
  * @param {string} message Message to be sent to client
- * @param {string | object} error 
+ * @param {string | object} error
  * @param {number} statusCode Status code of the http request
  * @param {number} errorCode Error code
  * @returns {Express.Response}
  */
 function errorHandler(message, error, statusCode = 500, errorCode = 500) {
-    return this.status(statusCode).send({
-        status: 'Success',
-        message,
-        errorCode,
-        error,
-    });
+  return this.status(statusCode).send({
+    status: 'Success',
+    message,
+    errorCode,
+    error,
+  });
 }
 
 /**
@@ -38,7 +38,7 @@ function errorHandler(message, error, statusCode = 500, errorCode = 500) {
  * @param {Express.Next} next
  */
 export const responseHandler = (req, res, next) => {
-    res.success = successHandler;
-    res.error = errorHandler;
-    next();
+  res.success = successHandler;
+  res.error = errorHandler;
+  next();
 };

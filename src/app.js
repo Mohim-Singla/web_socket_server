@@ -13,33 +13,33 @@ const server = http.createServer(app);
 const PORT = process.env.PORT || 3000;
 
 async function main() {
-    try {
-        app.use(express.json({ limit: '60mb', extended: true }));
-        app.use(express.urlencoded({ extended: true }));
-        app.use(debugLogger);
-        app.use(responseHandler);
+  try {
+    app.use(express.json({ limit: '60mb', extended: true }));
+    app.use(express.urlencoded({ extended: true }));
+    app.use(debugLogger);
+    app.use(responseHandler);
 
-        await mongoConnection.init();
+    await mongoConnection.init();
 
-        // Initialize WebSocket
-        socketConnection.initialize(server);
+    // Initialize WebSocket
+    socketConnection.initialize(server);
 
-        app.get('/ping', (req, res) => {
-            return res.success('Server is working fine.', { timestamp: Date.now() });
-        });
+    app.get('/ping', (req, res) => {
+      return res.success('Server is working fine.', { timestamp: Date.now() });
+    });
 
-        app.use('/web-socket', routeMap);
+    app.use('/web-socket', routeMap);
 
-        server.listen(PORT, (error) => {
-            if (error) {
-                throw error;
-            }
-            console.info('App is listening on PORT:', PORT);
-        });
-    } catch (error) {
-        console.error(error);
-        process.exit(1);
-    }
+    server.listen(PORT, (error) => {
+      if (error) {
+        throw error;
+      }
+      console.info('App is listening on PORT:', PORT);
+    });
+  } catch (error) {
+    console.error(error);
+    process.exit(1);
+  }
 }
 
 main();

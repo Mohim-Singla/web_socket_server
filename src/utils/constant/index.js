@@ -1,7 +1,7 @@
 export const constant = {
-    ENVS: {
-        LOCAL: 'local',
-        DEV: 'development',
-        PROD: 'production'
-    }
+  ENVS: {
+    LOCAL: 'local',
+    DEV: 'development',
+    PROD: 'production'
+  }
 };
