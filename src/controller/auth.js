@@ -1,4 +1,5 @@
 import { service } from '../service/index.js';
+import { utils } from '../utils/index.js';
 
 /**
  * Handles the user signup process.
@@ -62,7 +63,9 @@ async function login(req, res) {
       return res.error('Incorrect user email or password.', null, 403, 403);
     }
 
-    return res.success('User login successfuk.', { userId: userDetails.userId, email: userDetails.email, name: userDetails.name }, 200, 200);
+    const token = await utils.common.signToken({ email: userDetails.email, userId: userDetails.userId });
+
+    return res.success('User login successfuk.', { token, name: userDetails.name }, 200, 200);
   } catch (error) {
     console.error('User login failed.', error);
     return res.error('Something went wrong.', error.message, 500, 500);

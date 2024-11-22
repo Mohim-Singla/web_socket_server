@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 import { serviceConfig } from '../../config/index.js';
 
 export const common = {
@@ -80,32 +81,55 @@ export const common = {
     return uuidv4();
   },
   /**
- * Hashes a plain text password using bcrypt.
- * @param {string} password - The plain text password to hash.
- * @returns {Promise<string|null>} - A promise that resolves to the hashed password or `null` if no password is provided.
- * @example
- * const hashedPassword = await createPasswordHash('myPassword123');
- * console.log(hashedPassword); // Logs the hashed password
- */
+   * Hashes a plain text password using bcrypt.
+   * @param {string} password - The plain text password to hash.
+   * @returns {Promise<string|null>} - A promise that resolves to the hashed password or `null` if no password is provided.
+   * @example
+   * const hashedPassword = await createPasswordHash('myPassword123');
+   * console.log(hashedPassword); // Logs the hashed password
+   */
   createPasswordHash: (password) => {
     if (!password) return password;
     return bcrypt.hash(password, serviceConfig.PASSWORD_SALT_ROUNDS);
   },
 
   /**
-* Validates a plain text password against a hashed password.
-* @param {string} plainTextPassword - The plain text password provided by the user.
-* @param {string} passwordHash - The hashed password stored in the database.
-* @returns {Promise<boolean>} - A promise that resolves to `true` if the passwords match, or `false` otherwise.
-* @example
-* const isValid = await validatePassword('myPassword123', hashedPassword);
-* if (isValid) {
-*   console.log('Password is correct');
-* } else {
-*   console.log('Invalid password');
-* }
-*/
+   * Validates a plain text password against a hashed password.
+   * @param {string} plainTextPassword - The plain text password provided by the user.
+   * @param {string} passwordHash - The hashed password stored in the database.
+   * @returns {Promise<boolean>} - A promise that resolves to `true` if the passwords match, or `false` otherwise.
+   * @example
+   * const isValid = await validatePassword('myPassword123', hashedPassword);
+   * if (isValid) {
+   *   console.log('Password is correct');
+   * } else {
+   *   console.log('Invalid password');
+   * }
+   */
   validatePassword: async (plainTextPassword, passwordHash) => {
     return bcrypt.compare(plainTextPassword, passwordHash);
+  },
+
+  /**
+   * Asynchronously generates a signed JSON Web Token (JWT).
+   * @async
+   * @function signToken
+   * @param {Object} data - The payload to include in the token.
+   * @returns {Promise<string>} A promise that resolves to the signed JWT.
+   */
+  signToken: async (data) => {
+    return jwt.sign(data, serviceConfig.JWT_SECRET_KEY, { expiresIn: '1s' });
+  },
+
+  /**
+   * Asynchronously verifies a JSON Web Token (JWT).
+   * @async
+   * @function verifyToken
+   * @param {string} token - The JWT to verify.
+   * @returns {Promise<Object>} A promise that resolves to the decoded token payload if verification is successful.
+   * @throws {Error} If the token is invalid or expired.
+   */
+  verifyToken: async (token) => {
+    return jwt.verify(token, serviceConfig.JWT_SECRET_KEY);
   },
 };
