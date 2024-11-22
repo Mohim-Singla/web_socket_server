@@ -57,7 +57,8 @@ async function login(req, res) {
     if (!userDetails.isEnabled) {
       return res.error('User account is not active.', null, 403, 403);
     }
-    if (userDetails.password !== req.body.password) {
+    const isPasswordValid = await service.user.validatePassword(req.body.password, userDetails.password);
+    if (!isPasswordValid) {
       return res.error('Incorrect user email or password.', null, 403, 403);
     }
 

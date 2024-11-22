@@ -40,17 +40,37 @@ async function fetchOneWithEmail(userEmail) {
  * @description This function prepares the user data by generating a unique `userId` and sets default values for optional fields before passing the data to the repository for persistence.
  */
 async function create(params) {
+  const passwordHash = await utils.common.createPasswordHash(params.password);
   const userData = {
     userId: utils.common.createUuid(),
     email: params.email,
     name: params.name,
-    password: params.password,
+    password: passwordHash,
     isEnabled: params.isEnabled ?? false,
   };
   return mongoRepository.users.create(userData);
 }
 
+/**
+ * Validates a plain text password against a hashed password.
+ * @param {string} plainTextPassword - The plain text password provided by the user.
+ * @param {string} passwordHash - The hashed password stored in the database.
+ * @returns {Promise<boolean>} - Resolves to `true` if the passwords match, or `false` otherwise.
+ * @example
+ * const isValid = await validatePassword('myPassword123', hashedPassword);
+ * if (isValid) {
+ *   console.log('Password is correct');
+ * } else {
+ *   console.log('Invalid password');
+ * }
+ */
+async function validatePassword(plainTextPassword, passwordHash) {
+  const isPasswordValid = await utils.common.validatePassword(plainTextPassword, passwordHash);
+  return isPasswordValid;
+}
+
 export const user = {
   create,
   fetchOneWithEmail,
+  validatePassword,
 };
