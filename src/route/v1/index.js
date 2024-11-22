@@ -5,6 +5,7 @@
 
 import express from 'express';
 import { auth } from './auth.js';
+import { groups } from './groups.js';
 
 const router = new express.Router();
 
@@ -14,5 +15,6 @@ const router = new express.Router();
  * @description This middleware integrates the authentication routes defined in the `auth.js` module.
  */
 router.use('/auth', auth);
+router.use('/groups', groups);
 
 export const v1 = router;

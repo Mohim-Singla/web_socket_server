@@ -1,9 +1,10 @@
 import mongoose from 'mongoose';
+import { utils } from '../../../utils/index.js';
 
 const schema = new mongoose.Schema({
   groupId: { type: String, required: true, unique: true },
   title: { type: String, required: true },
-  type: { type: String, required: true, enum: ['public', 'private'] },
+  type: { type: String, required: true, enum: Object.values(utils.constant.GROUPS.TYPES) },
   description: { type: String, trim: true },
   members: [{ type: mongoose.Schema.Types.ObjectId }],
 }, { timestamps: true });

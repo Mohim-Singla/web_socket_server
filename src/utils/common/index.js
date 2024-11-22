@@ -118,7 +118,7 @@ export const common = {
    * @returns {Promise<string>} A promise that resolves to the signed JWT.
    */
   signToken: async (data) => {
-    return jwt.sign(data, serviceConfig.JWT_SECRET_KEY, { expiresIn: '1s' });
+    return jwt.sign(data, serviceConfig.JWT_SECRET_KEY, { expiresIn: '1h' });
   },
 
   /**
