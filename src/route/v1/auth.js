@@ -16,5 +16,11 @@ const router = new express.Router();
  * @description This endpoint validates the request body against the Joi schema and processes user signup.
  */
 router.post('/signup', validateRequest(JoiSchemas.authSchema.signup.body), controller.auth.signup);
+/**
+ * POST /login
+ * @summary Handles user login requests.
+ * @description This endpoint validates the request body against the Joi schema and processes user login.
+ */
+router.post('/login', validateRequest(JoiSchemas.authSchema.login.body), controller.auth.login);
 
 export const auth = router;

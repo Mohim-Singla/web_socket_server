@@ -34,6 +34,41 @@ async function signup (req, res) {
   }
 }
 
+/**
+ * Handles the user login process.
+ * @async
+ * @function login
+ * @param {object} req - Express request object.
+ * @param {object} req.body - Request body containing user credentials.
+ * @param {string} req.body.email - User's email address.
+ * @param {string} req.body.password - User's password.
+ * @param {object} res - Express response object.
+ * @returns {Promise<void>} Sends a JSON response indicating success or failure.
+ * @throws {Error} Logs and sends an error response if the operation fails.
+ * @description
+ * - Validates the email and password provided by the user.
+ * - If the user account is deactivated, responds with a forbidden error.
+ * - If the password is incorrect, responds with a forbidden error.
+ * - If authentication succeeds, responds with success.
+ */
+async function login(req, res) {
+  try {
+    const userDetails = await service.user.fetchOneWithEmail(req.body.email);
+    if (!userDetails.isEnabled) {
+      return res.error('User account is not active.', null, 403, 403);
+    }
+    if (userDetails.password !== req.body.password) {
+      return res.error('Incorrect user email or password.', null, 403, 403);
+    }
+
+    return res.success('User login successfuk.', { userId: userDetails.userId, email: userDetails.email, name: userDetails.name }, 200, 200);
+  } catch (error) {
+    console.error('User login failed.', error);
+    return res.error('Something went wrong.', error.message, 500, 500);
+  }
+}
+
 export const auth = {
   signup,
+  login,
 };
