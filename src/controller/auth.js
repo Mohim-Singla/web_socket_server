@@ -11,11 +11,16 @@ import { service } from '../service/index.js';
  * @param {string} req.body.password - User's password.
  * @param {object} res - Express response object.
  * @returns {Promise<void>} Sends a JSON response indicating success or failure.
- * @throws {object} Error object with details in case of failure.
- * @description Creates a new user with the provided details and sends a success response if successful. Logs and returns an error response if something goes wrong.
+ * @throws {Error} Throws an error if the operation fails.
+ * @description Creates a new user with the provided details. Returns a success response if the user is created successfully. If the email already exists, returns a conflict response. Logs and sends a generic error response if an unexpected error occurs.
  */
 async function signup (req, res) {
   try {
+    const existingUser = await service.user.fetchOneWithEmail(req.body.email);
+    if(existingUser) {
+      return res.error('User email already exists.', null, 409, 409);
+    }
+
     const newUser = await service.user.create({
       email: req.body.email,
       name: req.body.name,

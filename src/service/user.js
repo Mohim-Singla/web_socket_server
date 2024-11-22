@@ -2,6 +2,24 @@ import { mongoRepository } from '../repository/mongo/index.js';
 import { utils } from '../utils/index.js';
 
 /**
+ * Fetches a single user document from the database by email.
+ * @async
+ * @function fetchOneWithEmail
+ * @param {string} userEmail - The email address of the user to fetch.
+ * @returns {Promise<object|null>} The matched user document, or `null` if no user is found.
+ * @example
+ * const user = await user.fetchOneWithEmail('example@example.com');
+ * console.log(user);
+ * @description This function retrieves a user document from the database by searching for the specified email address.
+ */
+async function fetchOneWithEmail(userEmail) {
+  const condition = {
+    email: userEmail,
+  };
+  return mongoRepository.users.fetchOne(condition);
+}
+
+/**
  * Creates a new user by generating a UUID and preparing the user data.
  * @async
  * @function create
@@ -34,4 +52,5 @@ async function create(params) {
 
 export const user = {
   create,
+  fetchOneWithEmail,
 };

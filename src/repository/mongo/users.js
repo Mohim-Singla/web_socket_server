@@ -1,6 +1,23 @@
 import { modelMap } from '../../db/mongo/models/index.js';
 
 /**
+ * Fetches a single user document from the database.
+ * @async
+ * @function fetchOne
+ * @param {object} filter - MongoDB filter object to find the user.
+ * @param {object|null} [projection] - Fields to include or exclude in the result.
+ * @param {object|null} [options] - Additional query options.
+ * @returns {Promise<object|null>} The matched user document or `null` if no user is found.
+ * @example
+ * const user = await users.fetchOne({ email: 'example@example.com' }, { name: 1 }, { lean: true });
+ * console.log(user);
+ * @description This function queries the database for a single user document based on the provided filter.
+ */
+async function fetchOne(filter, projection, options) {
+  return modelMap.usersModel.getModel().findOne(filter, projection, options);
+}
+
+/**
  * Creates a new user record in the database.
  * @async
  * @function create
@@ -26,4 +43,5 @@ async function create(userData) {
 
 export const users = {
   create,
+  fetchOne,
 };
