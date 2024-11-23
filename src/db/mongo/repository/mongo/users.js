@@ -1,4 +1,4 @@
-import { modelMap } from '../../db/mongo/models/index.js';
+import { modelMap } from '../../models/index.js';
 
 /**
  * Fetches a single user document from the database.

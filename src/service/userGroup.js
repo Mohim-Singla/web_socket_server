@@ -1,4 +1,4 @@
-import { mongoRepository } from '../repository/mongo/index.js';
+import { mongoRepository } from '../db/mongo/repository/mongo/index.js';
 
 async function createUsersAssociationWithGroup(users, groupId) {
   const usersGroupData = users.map((user) => {

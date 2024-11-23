@@ -1,4 +1,4 @@
-import { mongoRepository } from '../repository/mongo/index.js';
+import { mongoRepository } from '../db/mongo/repository/mongo/index.js';
 import { utils } from '../utils/index.js';
 
 /**

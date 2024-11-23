@@ -1,4 +1,4 @@
-import { modelMap } from '../../db/mongo/models/index.js';
+import { modelMap } from '../../models/index.js';
 
 /**
  * Fetches all groups from the MongoDB database based on the provided filter, projection, and options.
