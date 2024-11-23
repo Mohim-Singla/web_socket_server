@@ -5,8 +5,9 @@ const schema = new mongoose.Schema({
   groupId: { type: String, required: true, unique: true },
   title: { type: String, required: true },
   type: { type: String, required: true, enum: Object.values(utils.constant.GROUPS.TYPES) },
+  createdBy: { type: String },
   description: { type: String, trim: true },
-  members: [{ type: mongoose.Schema.Types.ObjectId }],
+  members: [{ type: String }],
 }, { timestamps: true });
 
 let model;

@@ -17,6 +17,25 @@ async function fetchAll(filter, projection, options) {
   return modelMap.groupsModel.getModel().find(filter, projection, options);
 }
 
+/**
+ * Creates a new group in the MongoDB database.
+ * This function interacts with the MongoDB model to insert a new group document into the database.
+ * @async
+ * @function create
+ * @memberof module:groups
+ * @param {Object} groupData - The data for the new group (e.g., `{ title, type, description, createdBy, members }`).
+ * @returns {Promise<Object>} A promise that resolves to the created group document.
+ * @throws {Error} If there is an issue creating the group in the database.
+ */
+async function create(groupData) {
+  return modelMap.groupsModel.getModel().create(groupData);
+}
+
+/**
+ * Module containing database operations for groups.
+ * @module groups
+ */
 export const groups = {
+  create,
   fetchAll,
 };
