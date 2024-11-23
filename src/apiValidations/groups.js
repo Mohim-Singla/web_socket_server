@@ -1,3 +1,6 @@
+import Joi from 'joi';
+import { utils } from '../utils/index.js';
+
 /**
  * @typedef {Object} CreateGroupSchema
  * @property {string} title - The title of the group (required).
