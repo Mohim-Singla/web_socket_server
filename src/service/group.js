@@ -32,7 +32,6 @@ async function fetchGroupsWithType(type) {
  * @param {string} [params.description] - The description of the group (optional).
  * @param {string} params.type - The type of the group (e.g., 'PUBLIC', 'PRIVATE').
  * @param {string} params.createdBy - The user ID of the creator of the group.
- * @param {Array<string>} [params.members] - An array of user IDs who are members of the group (optional, defaults to an empty array).
  * @returns {Promise<Object>} Resolves with the created group document.
  * @throws {Error} If there is an issue creating the group in the database.
  */
@@ -43,7 +42,6 @@ async function create(params) {
     description: params.description ?? null,
     type: params.type,
     createdBy: params.createdBy,
-    members: params.members ?? [],
   };
   return mongoRepository.groups.create(groupData);
 }

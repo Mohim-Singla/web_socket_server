@@ -1,7 +1,9 @@
 import { groupsModel } from './groups.js';
+import { userGroupsModel } from './userGroups.js';
 import { usersModel } from './users.js';
 
 export const modelMap = {
-  usersModel,
   groupsModel,
+  usersModel,
+  userGroupsModel,
 };

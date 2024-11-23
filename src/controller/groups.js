@@ -9,8 +9,8 @@ import { utils } from '../utils/index.js';
  * @async
  * @function fetchPublicGroups
  * @memberof module:groups
- * @param {express.Request} req - The request object.
- * @param {express.Response} res - The response object.
+ * @param {Express.Request} req - The request object.
+ * @param {Express.Response} res - The response object.
  * @returns {Promise<void>} Resolves with a success response containing the list of public groups.
  * @throws {Error} If there is an issue fetching the public groups from the service.
  */
@@ -31,8 +31,8 @@ async function fetchPublicGroups(req, res) {
  * @async
  * @function createGroup
  * @memberof module:groups
- * @param {express.Request} req - The Express request object, expected to include user details and group data.
- * @param {express.Response} res - The Express response object.
+ * @param {Express.Request} req - The Express request object, expected to include user details and group data.
+ * @param {Express.Response} res - The Express response object.
  * @returns {Promise<void>} Resolves with a success response containing the created group details.
  * @throws {Error} Sends an error response if the group creation fails.
  */
@@ -43,8 +43,11 @@ async function createGroup(req, res) {
       description: req.body.description,
       type: req.body.type,
       createdBy: req.user.userId,
-      members: [req.user.userId],
     });
+
+    const users = [req.user.userId, ...(req.body.members ?? [])];
+    await service.userGroup.createUsersAssociationWithGroup(users, newGroup.groupId);
+
     return res.success('Group created successfully.', newGroup, 201);
   } catch (error) {
     console.error('Unable to create new group.', error);
