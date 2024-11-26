@@ -48,6 +48,8 @@ export const mongoConnection = {
   init: async () => {
     await initConnection();
     await initModels();
+
+    return mongoConnectionInstance;
   },
 
   /**

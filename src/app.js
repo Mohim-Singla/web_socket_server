@@ -1,3 +1,5 @@
+/* eslint-disable import/first */
+// eslint-disable-next-line import/newline-after-import
 import { serviceConfig } from './config/index.js';
 serviceConfig;
 import express from 'express';
@@ -7,6 +9,7 @@ import { routeMap } from './route/index.js';
 import { responseHandler } from './middleware/responseHandler.js';
 import { debugLogger } from './middleware/debug.js';
 import { mongoConnection } from './db/mongo/connection/index.js';
+import { mysqlConnection } from './db/mysql/connection/index.js';
 
 const app = express();
 const server = http.createServer(app);
@@ -19,7 +22,10 @@ async function main() {
     app.use(debugLogger);
     app.use(responseHandler);
 
-    await mongoConnection.init();
+    await Promise.all([
+      mongoConnection.init(),
+      mysqlConnection.init(),
+    ]);
 
     // Initialize WebSocket
     socketConnection.initialize(server);

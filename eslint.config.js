@@ -1,5 +1,6 @@
-import globals from 'globals';
+import pluginImport from 'eslint-plugin-import';
 import pluginJs from '@eslint/js';
+import globals from 'globals';
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
@@ -8,13 +9,24 @@ export default [
       globals: globals.node,
     },
     rules: {
-      // Example stylistic rules
-      'no-trailing-spaces': 'error', // Disallow trailing spaces
-      'indent': ['error', 2],       // Enforce consistent indentation
-      'eol-last': ['error', 'always'], // Enforce a newline at the end of files
-      'semi': ['error', 'always'],  // Enforce semicolons
-      'quotes': ['error', 'single'], // Enforce double quotes
-      'no-multiple-empty-lines': ['error', { max: 1 }], // Disallow multiple empty lines
+      'no-trailing-spaces': 'error',
+      'indent': ['error', 2],
+      'eol-last': ['error', 'always'],
+      'semi': ['error', 'always'],
+      'quotes': ['error', 'single'],
+      'no-multiple-empty-lines': ['error', { max: 1 }],
+      'comma-dangle': ['error', {
+        arrays: 'always-multiline',
+        objects: 'always-multiline',
+        imports: 'always-multiline',
+        exports: 'always-multiline',
+        functions: 'never',
+      }],
+      'import/first': 'error',
+      'import/newline-after-import': ['error', { count: 1 }],
+    },
+    plugins: {
+      import: pluginImport,
     },
   },
   pluginJs.configs.recommended,
