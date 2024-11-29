@@ -5,7 +5,6 @@ module.exports = {
       userId: {
         allowNull: false,
         type: Sequelize.STRING,
-        primaryKey: true,
       },
       groupId: {
         allowNull: false,
