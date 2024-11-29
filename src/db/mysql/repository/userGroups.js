@@ -17,9 +17,25 @@ async function bulkCreate(usersGroupData, transaction) {
 }
 
 /**
+ * Fetches all userGroups from the MySQL database using Sequelize.
+ * This function interacts with the Sequelize model to retrieve userGroups based on the provided options,
+ * such as filtering, projection, pagination, and sorting.
+ * @async
+ * @function fetchAll
+ * @memberof module:userGroups
+ * @param {Object} options - Sequelize query options (e.g., `where`, `attributes`, `limit`, `offset`, `order`).
+ * @returns {Promise<Array>} A promise that resolves to an array of userGroups association matching the query options.
+ * @throws {Error} If there is an issue fetching the userGroups from the database.
+ */
+async function fetchAll(options) {
+  return modelMap.userGroupsModel.getModel().findAll(options);
+}
+
+/**
  * Module containing database operations for user-group relations.
  * @module userGroups
  */
 export const userGroups = {
   bulkCreate,
+  fetchAll,
 };

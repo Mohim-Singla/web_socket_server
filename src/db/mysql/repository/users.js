@@ -40,6 +40,10 @@ async function create(userData, transaction) {
   return modelMap.usersModel.getModel().create(userData, transaction);
 }
 
+/**
+ * Module containing database operations for groups.
+ * @module users
+ */
 export const users = {
   create,
   fetchOne,

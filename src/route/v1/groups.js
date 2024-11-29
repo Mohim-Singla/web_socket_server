@@ -27,6 +27,21 @@ const router = new express.Router();
 router.get('/public', authenticate, controller.groups.fetchPublicGroups);
 
 /**
+ * Endpoint to fetch all private groups.
+ * This route is protected by authentication middleware.
+ * It retrieves a list of private groups from the database.
+ * @name GET /groups/private
+ * @function
+ * @memberof module:groups
+ * @param {express.Request} req - The request object.
+ * @param {express.Response} res - The response object.
+ * @param {express.NextFunction} next - The next middleware function.
+ * @returns {Promise<void>} Resolves with the list of private groups.
+ * @throws {Error} If there is an issue fetching the groups from the database.
+ */
+router.get('/private', authenticate, controller.groups.fetchPrivateGroups);
+
+/**
  * Endpoint to create a new group.
  * This route is protected by authentication middleware.
  * It validates the request body against the schema, then creates a new group in the database.

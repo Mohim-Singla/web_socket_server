@@ -25,6 +25,33 @@ async function fetchPublicGroups(req, res) {
 }
 
 /**
+ * Fetches a list of private groups from the service layer.
+ * This function interacts with the service layer to retrieve groups of the "PRIVATE" type
+ * and returns the data in a successful response. If an error occurs during the fetch,
+ * it logs the error to the console.
+ * @async
+ * @function fetchPrivateGroups
+ * @memberof module:groups
+ * @param {Express.Request} req - The request object.
+ * @param {Express.Response} res - The response object.
+ * @returns {Promise<void>} Resolves with a success response containing the list of private groups.
+ * @throws {Error} If there is an issue fetching the private groups from the service.
+ */
+async function fetchPrivateGroups(req, res) {
+  try {
+    const userId = req.user.userId;
+
+    const userGroups = await service.userGroup.fetchUserGroups(userId);
+    const userGroupIds = userGroups.map((userGroup) => userGroup.groupId);
+    const privateGroupData = await service.group.fetchGroupsData(userGroupIds, utils.constant.GROUPS.TYPES.PRIVATE);
+
+    return res.success('Private groups fetched successfully.', privateGroupData, 200, 200);
+  } catch (error) {
+    console.error('Failed to fetch private groups data.', error);
+  }
+}
+
+/**
  * Creates a new group.
  * This function validates the request body, then interacts with the service layer to
  * create a new group. It includes the current user as the creator and initial member.
@@ -64,5 +91,6 @@ async function createGroup(req, res) {
  */
 export const groups = {
   createGroup,
+  fetchPrivateGroups,
   fetchPublicGroups,
 };

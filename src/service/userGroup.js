@@ -32,6 +32,23 @@ async function createUsersAssociationWithGroup(users, groupId, transaction) {
   return mysqlRepository.userGroups.bulkCreate(usersGroupData, transaction);
 }
 
+/**
+ * Fetches the groups associated with a given user.
+ * @param {number|string} userId - The ID of the user whose groups are to be fetched.
+ * @returns {Promise<Array>} A promise that resolves to an array of user groups.
+ * @throws {Error} Throws an error if the database query fails.
+ */
+async function fetchUserGroups(userId) {
+  const options = {
+    where: {
+      userId,
+      isEnabled: true,
+    },
+  };
+  return mysqlRepository.userGroups.fetchAll(options);
+}
+
 export const userGroup = {
   createUsersAssociationWithGroup,
+  fetchUserGroups,
 };

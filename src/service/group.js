@@ -21,6 +21,27 @@ async function fetchGroupsWithType(type) {
 }
 
 /**
+ * @async
+ * @function fetchGroupsData
+ * @memberof module:group
+ * Fetches group data based on group IDs and type.
+ * @param {Array<number|string>} groupIds - An array of group IDs to fetch the data for.
+ * @param {string} type - The type of the groups to filter by.
+ * @returns {Promise<Array>} A promise that resolves to an array of group data.
+ * @throws {Error} Throws an error if the database query fails.
+ */
+async function fetchGroupsData(groupIds, type) {
+  const condition = {
+    where: {
+      groupId: groupIds,
+      type,
+    },
+  };
+
+  return mysqlRepository.groups.fetchAll(condition);
+}
+
+/**
  * Creates a new group in the MySQL database using Sequelize.
  * This function prepares the group data, including generating a new `groupId` using a utility function,
  * and calls the repository method to insert the group into the database.
@@ -49,5 +70,6 @@ async function create(params, transaction = null) {
 
 export const group = {
   create,
+  fetchGroupsData,
   fetchGroupsWithType,
 };
