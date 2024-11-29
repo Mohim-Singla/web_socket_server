@@ -55,6 +55,9 @@ async function signup (req, res) {
 async function login(req, res) {
   try {
     const userDetails = await service.user.fetchOneWithEmail(req.body.email);
+    if (!userDetails) {
+      return res.error('User does not exists.', null, 404, 404);
+    }
     if (!userDetails.isEnabled) {
       return res.error('User account is not active.', null, 403, 403);
     }

@@ -15,6 +15,7 @@ export default [
       'semi': ['error', 'always'],
       'quotes': ['error', 'single'],
       'no-multiple-empty-lines': ['error', { max: 1 }],
+      'object-curly-spacing': ['error', 'always'],
       'comma-dangle': ['error', {
         arrays: 'always-multiline',
         objects: 'always-multiline',

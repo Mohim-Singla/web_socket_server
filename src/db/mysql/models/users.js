@@ -12,8 +12,9 @@ let model;
 
 export const usersModel = {
   init: async (mysqlConnection) => {
-    class Users extends Model {}
-    model = Users.init(schema, { sequelize: mysqlConnection, modelName: 'users' });
+    class users extends Model {}
+    model = users.init(schema, { sequelize: mysqlConnection, modelName: 'users' });
+    users.removeAttribute('id');
   },
 
   getModel: () => model,

@@ -12,8 +12,9 @@ let model;
 
 export const groupsModel = {
   init: async (mysqlConnection) => {
-    class Groups extends Model {}
-    model = Groups.init(schema, { sequelize: mysqlConnection, modelName: 'groups' });
+    class groups extends Model {}
+    model = groups.init(schema, { sequelize: mysqlConnection, modelName: 'groups' });
+    groups.removeAttribute('id');
   },
 
   getModel: () => model,

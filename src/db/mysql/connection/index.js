@@ -7,10 +7,7 @@ let mysqlConnectionInstance = null;
 
 async function initConnection() {
 
-  mysqlConnectionInstance = new Sequelize(mysqlConnectionConfig.database, mysqlConnectionConfig.username, mysqlConnectionConfig.password, {
-    host: mysqlConnectionConfig.host,
-    dialect: mysqlConnectionConfig.dialect,
-  });
+  mysqlConnectionInstance = new Sequelize(mysqlConnectionConfig.database, mysqlConnectionConfig.username, mysqlConnectionConfig.password, mysqlConnectionConfig);
 
   await mysqlConnectionInstance.authenticate();
 
