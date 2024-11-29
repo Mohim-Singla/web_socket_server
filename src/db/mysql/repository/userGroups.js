@@ -7,12 +7,13 @@ import { modelMap } from '../models/index.js';
  * @function bulkCreate
  * @memberof module:userGroups
  * @param {Array<Object>} usersGroupData - An array of objects containing user-group data
+ * @param {object} [transaction] - An optional transaction object for managing the operation within a transaction.
  * (e.g., `[ { userId: 1, groupId: 2 }, { userId: 3, groupId: 4 } ]`).
  * @returns {Promise<Array<Object>>} A promise that resolves to an array of the created records.
  * @throws {Error} If there is an issue performing the bulk insert in the database.
  */
-async function bulkCreate(usersGroupData) {
-  return modelMap.userGroupsModel.getModel().bulkCreate(usersGroupData);
+async function bulkCreate(usersGroupData, transaction) {
+  return modelMap.userGroupsModel.getModel().bulkCreate(usersGroupData, transaction);
 }
 
 /**

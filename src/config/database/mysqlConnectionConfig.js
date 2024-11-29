@@ -1,7 +1,10 @@
-import { utils } from '../../utils/index.js';
+import dotenv from 'dotenv';
+import { constant } from '../../utils/constant/index.js';
+
+dotenv.config();
 
 const config = {
-  [utils.constant.ENVS.LOCAL]: {
+  [constant.ENVS.LOCAL]: {
     host: process.env.MYSQL_HOST_IP,
     dialect: 'mysql',
     username: process.env.MYSQL_USER,
@@ -15,7 +18,7 @@ const config = {
     },
     logging: false,
   },
-  [utils.constant.ENVS.DEV]: {
+  [constant.ENVS.DEV]: {
     host: process.env.MYSQL_HOST_IP,
     dialect: 'mysql',
     username: process.env.MYSQL_USER,
@@ -29,7 +32,7 @@ const config = {
     },
     logging: false,
   },
-  [utils.constant.ENVS.PROD]: {
+  [constant.ENVS.PROD]: {
     host: process.env.MYSQL_HOST_IP,
     dialect: 'mysql',
     username: process.env.MYSQL_USER,

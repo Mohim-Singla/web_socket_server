@@ -1,7 +1,6 @@
 import Sequelize from 'sequelize';
 import { mysqlConnectionConfig } from '../../../config/database/mysqlConnectionConfig.js';
 import { modelMap } from '../models/index.js';
-// import { modelMap } from '../models/index.js';
 
 let mysqlConnectionInstance = null;
 

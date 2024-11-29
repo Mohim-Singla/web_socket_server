@@ -24,6 +24,7 @@ async function fetchOne(options) {
  * @param {string} userData.name - User's name.
  * @param {string} userData.password - User's password.
  * @param {boolean} userData.isEnabled - Indicates if the user account is enabled.
+  * @param {object} [transaction] - An optional transaction object for managing the operation within a transaction.
  * @returns {Promise<object>} The created user record.
  * @example
  * const newUser = await users.create({
@@ -35,8 +36,8 @@ async function fetchOne(options) {
  * console.log(newUser);
  * @description This function interacts with the database to create a new user record using the `usersModel`.
  */
-async function create(userData) {
-  return modelMap.usersModel.getModel().create(userData);
+async function create(userData, transaction) {
+  return modelMap.usersModel.getModel().create(userData, transaction);
 }
 
 export const users = {

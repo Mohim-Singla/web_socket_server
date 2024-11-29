@@ -28,6 +28,7 @@ async function fetchOneWithEmail(userEmail) {
  * @param {string} params.name - User's name.
  * @param {string} params.password - User's password.
  * @param {boolean} [params.isEnabled=false] - Indicates if the user account should be enabled. Defaults to `false`.
+ * @param {object} [transaction] - An optional transaction object for managing the operation within a transaction.
  * @returns {Promise<object>} The created user record from the database.
  * @example
  * const newUser = await user.create({
@@ -40,7 +41,7 @@ async function fetchOneWithEmail(userEmail) {
  * @description This function prepares the user data by generating a unique `userId` and hashing the password.
  * It sets default values for optional fields before saving the user in the database.
  */
-async function create(params) {
+async function create(params, transaction = null) {
   const passwordHash = await utils.common.createPasswordHash(params.password);
   const userData = {
     userId: utils.common.createUuid(),
@@ -49,7 +50,7 @@ async function create(params) {
     password: passwordHash,
     isEnabled: params.isEnabled ?? false,
   };
-  return mysqlRepository.users.create(userData);
+  return mysqlRepository.users.create(userData, transaction);
 }
 
 /**

@@ -37,19 +37,22 @@ async function fetchPublicGroups(req, res) {
  * @throws {Error} Sends an error response if the group creation fails.
  */
 async function createGroup(req, res) {
+  const transaction = await utils.common.fetchSqlTransactionInstance();
   try {
     const newGroup = await service.group.create({
       title: req.body.title,
       description: req.body.description,
       type: req.body.type,
       createdBy: req.user.userId,
-    });
+    }, transaction);
 
     const users = [req.user.userId, ...(req.body.members ?? [])];
-    await service.userGroup.createUsersAssociationWithGroup(users, newGroup.groupId);
+    await service.userGroup.createUsersAssociationWithGroup(users, newGroup.groupId, transaction);
 
+    await utils.common.commitTransaction(transaction);
     return res.success('Group created successfully.', newGroup, 201);
   } catch (error) {
+    await utils.common.rollbackTransaction(transaction);
     console.error('Unable to create new group.', error);
     return res.error('Something went wrong.', error.message, 500, 500);
   }

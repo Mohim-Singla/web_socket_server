@@ -22,11 +22,12 @@ async function fetchAll(options) {
  * @function create
  * @memberof module:groups
  * @param {Object} groupData - The data for the new group (e.g., `{ title, type, description, createdBy, members }`).
+  * @param {object} [transaction] - An optional transaction object for managing the operation within a transaction.
  * @returns {Promise<Object>} A promise that resolves to the created group record.
  * @throws {Error} If there is an issue creating the group in the database.
  */
-async function create(groupData) {
-  return modelMap.groupsModel.getModel().create(groupData);
+async function create(groupData, transaction) {
+  return modelMap.groupsModel.getModel().create(groupData, { transaction });
 }
 
 /**

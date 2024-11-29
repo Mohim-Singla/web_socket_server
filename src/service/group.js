@@ -32,10 +32,11 @@ async function fetchGroupsWithType(type) {
  * @param {string} [params.description] - The description of the group (optional).
  * @param {string} params.type - The type of the group (e.g., 'PUBLIC', 'PRIVATE').
  * @param {string} params.createdBy - The user ID of the creator of the group.
+ * @param {object} [transaction] - An optional transaction object for managing the operation within a transaction.
  * @returns {Promise<Object>} Resolves with the created group record.
  * @throws {Error} If there is an issue creating the group in the database.
  */
-async function create(params) {
+async function create(params, transaction = null) {
   const groupData = {
     groupId: utils.common.createUuid(),
     title: params.title,
@@ -43,7 +44,7 @@ async function create(params) {
     type: params.type,
     createdBy: params.createdBy,
   };
-  return mysqlRepository.groups.create(groupData);
+  return mysqlRepository.groups.create(groupData, transaction);
 }
 
 export const group = {

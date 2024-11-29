@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { serviceConfig } from '../../config/index.js';
+import { mysqlConnection } from '../../db/mysql/connection/index.js';
 
 export const common = {
   /**
@@ -131,5 +132,42 @@ export const common = {
    */
   verifyToken: async (token) => {
     return jwt.verify(token, serviceConfig.JWT_SECRET_KEY);
+  },
+
+  /**
+   * Fetches a new SQL transaction instance.
+   * @async
+   * @function fetchSqlTransactionInstance
+   * @returns {Promise<object>} Resolves to the transaction instance.
+   * @description This function retrieves a new transaction instance from the MySQL connection.
+   */
+  fetchSqlTransactionInstance: async () => {
+    return mysqlConnection.getInstance().transaction();
+  },
+
+  /**
+   * Commits the provided SQL transaction.
+   * @async
+   * @function commitTransaction
+   * @param {object} transaction - The transaction instance to commit.
+   * @returns {Promise<void>} Resolves once the transaction is committed.
+   * @description This function commits the given transaction to the database.
+   */
+  commitTransaction: async (transaction) => {
+    return transaction.commit();
+  },
+
+  /**
+   * Rolls back the provided SQL transaction.
+   * @async
+   * @function rollbackTransaction
+   * @param {object} transaction - The transaction instance to roll back.
+   * @returns {Promise<void>} Resolves once the transaction is rolled back, or undefined if no transaction is provided.
+   * @description This function rolls back the given transaction if it exists, reverting any changes made during the transaction.
+   */
+  rollbackTransaction: async (transaction) => {
+    if (transaction) {
+      return transaction.rollback();
+    }
   },
 };
