@@ -48,7 +48,32 @@ async function fetchUserGroups(userId) {
   return mysqlRepository.userGroups.fetchAll(options);
 }
 
+/**
+ * Checks if a user is part of a specific group in the MySQL database.
+ * This function uses Sequelize to query the userGroups table to determine if a record exists
+ * matching the provided `userId` and `groupId`.
+ * @async
+ * @function isUserPartOfGroup
+ * @param {number|string} userId - The ID of the user to check.
+ * @param {number|string} groupId - The ID of the group to check.
+ * @returns {Promise<boolean>} A promise that resolves to `true` if the user is part of the group,
+ *                              and `false` otherwise.
+ * @throws {Error} If there is an issue checking the user's group membership.
+ */
+async function isUserPartOfGroup(userId, groupId) {
+  const options = {
+    where: {
+      userId,
+      groupId,
+    },
+  };
+  const userGroupData = await mysqlRepository.userGroups.fetchOne(options);
+
+  return !!userGroupData;
+}
+
 export const userGroup = {
   createUsersAssociationWithGroup,
   fetchUserGroups,
+  isUserPartOfGroup,
 };

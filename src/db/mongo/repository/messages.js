@@ -1,17 +1,20 @@
 import { modelMap } from '../models/index.js';
 
 /**
- * Fetches all messages from the MongoDB database based on the provided filter, projection, and options.
- * This function interacts with the MongoDB model to retrieve messages matching the specified
- * filter conditions, and applies optional projections and query options (e.g., pagination, sorting).
+ * Fetches messages from the database for a specific group with optional filters, pagination, and sorting.
  * @async
- * @function fetchAll
- * @memberof module:messages
- * @param {Object} filter - The filter conditions to match messages.
- * @param {Object} [projection] - The fields to include or exclude in the result.
- * @param {Object} [options] - Additional query options, such as pagination or sorting.
- * @returns {Promise<Array>} A promise that resolves to an array of messages matching the filter.
- * @throws {Error} If there is an issue fetching the messages from the database.
+ * @function fetchAllWithGroupId
+ * @param {string} groupId - The ID of the group to filter messages by.
+ * @param {object} params - Additional query parameters for fetching messages.
+ * @param {number} [params.limit] - The maximum number of messages to retrieve.
+ * @param {number} [params.offset] - The number of messages to skip (used for pagination).
+ * @returns {Promise<Array<object>>} A promise that resolves to an array of messages matching the criteria.
+ * @throws {Error} If there is an issue fetching the records from the database.
+ * @example
+ * const messages = await fetchAllWithGroupId('group456', { limit: 10, offset: 0 });
+ * console.log(messages);
+ * @description Retrieves messages for the specified group from the database.
+ * Results are sorted in descending order by timestamp by default.
  */
 async function fetchAll(filter, projection, options) {
   return modelMap.messagesModel.getModel().find(filter, projection, options);

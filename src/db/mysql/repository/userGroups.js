@@ -32,10 +32,26 @@ async function fetchAll(options) {
 }
 
 /**
+ * Fetches a single userGroup from the MySQL database using Sequelize.
+ * This function interacts with the Sequelize model to retrieve a single userGroup based on the provided options,
+ * such as filtering, projection, pagination, and sorting.
+ * @async
+ * @function fetchOne
+ * @memberof module:userGroups
+ * @param {Object} options - Sequelize query options (e.g., `where`, `attributes`, `limit`, `offset`, `order`).
+ * @returns {Promise<Object|null>} A promise that resolves to a single userGroup object or null if not found.
+ * @throws {Error} If there is an issue fetching the userGroup from the database.
+ */
+async function fetchOne(options) {
+  return modelMap.userGroupsModel.getModel().findOne(options);
+}
+
+/**
  * Module containing database operations for user-group relations.
  * @module userGroups
  */
 export const userGroups = {
   bulkCreate,
   fetchAll,
+  fetchOne,
 };

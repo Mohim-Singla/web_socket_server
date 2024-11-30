@@ -28,6 +28,22 @@ async function save(params) {
   return mongoRepository.messages.create(messageData);
 }
 
+/**
+ * Fetches records from the database based on the provided `groupId` and additional query parameters.
+ * @async
+ * @function fetchAllWithGroupId
+ * @param {number|string} groupId - The ID of the group to filter by.
+ * @param {Object} params - Additional query parameters (e.g., filters, pagination, sorting).
+ * @returns {Promise<Array>} A promise that resolves to an array of records matching the `groupId` and query parameters.
+ * @throws {Error} If there is an issue fetching the records from the database.
+ */
+async function fetchAllWithGroupId(groupId, params){
+  const { limit, offset } = params;
+  const messages = await mongoRepository.messages.fetchAll({ groupId }, null, { limit, skip: offset, sort: { timestamp: -1 } });
+  return messages;
+}
+
 export const message = {
   save,
+  fetchAllWithGroupId,
 };

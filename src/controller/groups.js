@@ -86,6 +86,44 @@ async function createGroup(req, res) {
 }
 
 /**
+ * Fetches messages for a group with pagination.
+ * @async
+ * @function fetchGroupMessages
+ * @param {object} req - The HTTP request object.
+ * @param {object} req.params - The route parameters.
+ * @param {string} req.params.groupId - The ID of the group to fetch messages for.
+ * @param {object} req.query - The query parameters for pagination.
+ * @param {number|string} [req.query.limit=50] - The maximum number of messages to retrieve.
+ * @param {number|string} [req.query.offset=0] - The number of messages to skip.
+ * @param {object} req.user - The authenticated user's data.
+ * @param {string} req.user.userId - The ID of the authenticated user.
+ * @param {object} res - The HTTP response object.
+ * @returns {Promise<object>} Sends a response with the fetched messages or an error message.
+ */
+async function fetchGroupMessages(req, res) {
+  try {
+    const { groupId } = req.params;
+    const { limit = 50, offset = 0 } = req.query;
+
+    const isUserPartOfGroup = await service.userGroup.isUserPartOfGroup(req.user.userId, groupId);
+
+    if(!isUserPartOfGroup) {
+      return res.error('Invalid access to group messages.', null, 403, 403);
+    }
+
+    const messages = await service.message.fetchAllWithGroupId(groupId, {
+      limit: parseInt(limit, 10),
+      offset: parseInt(offset, 10),
+    });
+
+    return res.success('Messages fetched successfully.', messages, 200, 200);
+  } catch (error) {
+    console.error('Unable to fetch user messages.', error);
+    return res.error('Something went wrong.', error.message, 500, 500);
+  }
+}
+
+/**
  * Module containing group-related controller functions.
  * @module groups
  */
@@ -93,4 +131,5 @@ export const groups = {
   createGroup,
   fetchPrivateGroups,
   fetchPublicGroups,
+  fetchGroupMessages,
 };

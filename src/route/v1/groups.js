@@ -56,4 +56,24 @@ router.get('/private', authenticate, controller.groups.fetchPrivateGroups);
  */
 router.post('/create', authenticate, validateRequest(JoiSchemas.groupsSchema.createGroup.body), controller.groups.createGroup);
 
+/**
+ * Fetches messages for a specific group.
+ * This route is protected by authentication middleware.
+ * @name GET /:groupId/messages
+ * @function
+ * @memberof module:groups
+ * @param {express.Request} req - The Express request object containing:
+ * @param {object} req.params - The route parameters.
+ * @param {string} req.params.groupId - The ID of the group whose messages are being fetched.
+ * @param {object} req.query - The query parameters for pagination.
+ * @param {number|string} [req.query.limit=50] - The maximum number of messages to retrieve (optional).
+ * @param {number|string} [req.query.offset=0] - The number of messages to skip (optional).
+ * @param {express.Response} res - The Express response object to send the result.
+ * @param {express.NextFunction} next - The next middleware function in the stack.
+ * @returns {Promise<void>} Sends a success response with the fetched messages.
+ * @returns {Array<object>} res.body - An array of message objects sorted by timestamp.
+ * @throws {Error} If the user is not authorized to access the group or if message retrieval fails.
+ */
+router.get('/:groupId/messages', authenticate, controller.groups.fetchGroupMessages);
+
 export const groups = router;
