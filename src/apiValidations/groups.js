@@ -17,6 +17,7 @@ const createGroup = {
   body: Joi.object({
     title: Joi.string().required(),
     type: Joi.string().required().valid(...Object.values(utils.constant.GROUPS.TYPES)),
+    members: Joi.array().optional().items(Joi.string()),
     description: Joi.string().optional(),
   }),
 };

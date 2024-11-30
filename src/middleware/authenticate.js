@@ -12,15 +12,15 @@ import { utils } from '../utils/index.js';
  */
 export const authenticate = async (req, res, next) => {
   try {
-    const token = req.headers.authorization?.split(' ')[1]; // Extract token from Authorization header
+    const token = req.headers?.authorization?.split(' ')[1] ?? req.handshake?.headers?.token;
     if (!token) {
-      return res.error('Token not provided', null, 401, 401);
+      return res ? res.error('Token not provided.', null, 401, 401) : next(new Error('Token not provided.'));
     }
 
     const decodedData = await utils.common.verifyToken(token);
     req.user = decodedData;
     next();
   } catch (error) {
-    return res.error('Invalid or expired token.', error.message, 401, 401);
+    return res ? res.error('Invalid or expired token.', error.message, 401, 401) : next(new Error('Invalid or expired token.'));
   }
 };
