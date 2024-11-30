@@ -24,9 +24,10 @@ export const socketConnection = {
         console.log('User disconnected');
       });
 
-      socket.on('group_message', ({ groupId, message }) => {
+      socket.on('group_message', async ({ groupId, message }) => {
         const groupRoom = `group_${groupId}`;
         if (socket.rooms.has(groupRoom)) {
+          await service.message.save({ userId: socket.user.userId, groupId, messageContent: message });
           io.to(groupRoom).emit('group_message', {
             groupId,
             sender: socket.user.userId,
