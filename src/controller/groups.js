@@ -105,12 +105,6 @@ async function fetchGroupMessages(req, res) {
     const { groupId } = req.params;
     const { limit = 50, offset = 0 } = req.query;
 
-    const isUserPartOfGroup = await service.userGroup.isUserPartOfGroup(req.user.userId, groupId);
-
-    if(!isUserPartOfGroup) {
-      return res.error('Invalid access to group messages.', null, 403, 403);
-    }
-
     const messages = await service.message.fetchAllWithGroupId(groupId, {
       limit: parseInt(limit, 10),
       offset: parseInt(offset, 10),
@@ -124,10 +118,41 @@ async function fetchGroupMessages(req, res) {
 }
 
 /**
+ * Adds members to a group by creating associations between users and the specified group.
+ *
+ * @async
+ * @function addGroupMembers
+ * @param {Object} req - The request object.
+ * @param {Object} req.params - The request parameters.
+ * @param {string} req.params.groupId - The ID of the group to which members are to be added.
+ * @param {Object} req.body - The request body.
+ * @param {Array<string>} req.body.members - An array of user IDs to be added to the group.
+ * @param {Object} res - The response object.
+ * @returns {Promise<Object>} Response indicating success or error.
+ * @throws Will return an error response if adding members fails.
+ */
+async function addGroupMembers(req, res) {
+  const transaction = await utils.common.fetchSqlTransactionInstance();
+  try {
+    const { groupId } = req.params;
+
+    await service.userGroup.createUsersAssociationWithGroup(req.body.members, groupId, transaction);
+
+    await utils.common.commitTransaction(transaction);
+    return res.success('Members added to group successfully', null, 200,200);
+  } catch (error) {
+    await utils.common.rollbackTransaction(transaction);
+    console.error('Unable to add members to the group.', error);
+    return res.error('Something went wrong.', error.message, 500, 500);
+  }
+}
+
+/**
  * Module containing group-related controller functions.
  * @module groups
  */
 export const groups = {
+  addGroupMembers,
   createGroup,
   fetchPrivateGroups,
   fetchPublicGroups,

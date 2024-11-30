@@ -1,27 +1,35 @@
 import { mysqlRepository } from '../db/mysql/repository/index.js';
 
 /**
- * Creates associations between multiple users and a group in the database.
- * This function generates the association data and uses the repository to perform a bulk insert.
+ * Creates or updates associations between multiple users and a group in the database.
  *
  * @async
  * @function createUsersAssociationWithGroup
  * @param {Array<string>} users - An array of user IDs to associate with the group.
  * @param {string} groupId - The ID of the group to associate the users with.
- * @param {object} [transaction] - An optional transaction object for managing the operation within a transaction.
- * @returns {Promise<Array<object>>} Resolves to an array of created association records.
+ * @param {object} [transaction] - An optional Sequelize transaction object for atomic operations.
+ * @returns {Promise<Array>} Resolves to an array of results from the bulk create and update operations.
+ *
+ * @description
+ * - For users not already associated with the group, new association records are created with `isEnabled: true`.
+ * - For users already associated with the group, their `isEnabled` status is updated to `true`.
+ * - Performs a bulk insert for new associations and a bulk update for existing ones within a transaction if provided.
+ *
  * @example
- * const associations = await userGroup.createUsersAssociationWithGroup(
+ * const associations = await createUsersAssociationWithGroup(
  *   ['user1', 'user2', 'user3'],
- *   'group123'
+ *   'group123',
+ *   transaction
  * );
  * console.log(associations);
- *
- * @description This function maps each user ID to the specified group ID and enables the association by default.
- * It then performs a bulk insert of these associations into the database.
  */
 async function createUsersAssociationWithGroup(users, groupId, transaction) {
-  const usersGroupData = users.map((user) => {
+  const existingUserGroupsAssociation = await mysqlRepository.userGroups.fetchAll({ where: { userId: users, groupId } });
+
+  const existingUserIds = Array.from(new Set(existingUserGroupsAssociation.map(assoc => assoc.userId)));
+  const nonExistingUserIds = Array.from(new Set(users.filter(userId => !existingUserIds.includes(userId))));
+
+  const newUsersGroupData = nonExistingUserIds.map((user) => {
     return {
       userId: user,
       groupId,
@@ -29,7 +37,14 @@ async function createUsersAssociationWithGroup(users, groupId, transaction) {
     };
   });
 
-  return mysqlRepository.userGroups.bulkCreate(usersGroupData, transaction);
+  const promises = [];
+  if (newUsersGroupData.length) {
+    promises.push(mysqlRepository.userGroups.bulkCreate(newUsersGroupData, transaction));
+  }
+  if (existingUserIds.length) {
+    promises.push(mysqlRepository.userGroups.update({ isEnabled: true }, { where: { userId: existingUserIds, groupId }, transaction }));
+  }
+  return Promise.all(promises);
 }
 
 /**

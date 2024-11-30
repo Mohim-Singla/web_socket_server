@@ -37,7 +37,7 @@ async function fetchOne(options) {
  * @description This function interacts with the database to create a new user record using the `usersModel`.
  */
 async function create(userData, transaction) {
-  return modelMap.usersModel.getModel().create(userData, transaction);
+  return modelMap.usersModel.getModel().create(userData, { transaction });
 }
 
 /**

@@ -13,7 +13,7 @@ import { modelMap } from '../models/index.js';
  * @throws {Error} If there is an issue performing the bulk insert in the database.
  */
 async function bulkCreate(usersGroupData, transaction) {
-  return modelMap.userGroupsModel.getModel().bulkCreate(usersGroupData, transaction);
+  return modelMap.userGroupsModel.getModel().bulkCreate(usersGroupData, { transaction });
 }
 
 /**
@@ -47,6 +47,21 @@ async function fetchOne(options) {
 }
 
 /**
+ * Updates records in the user_groups table based on the provided data and options.
+ *
+ * @async
+ * @function update
+ * @param {Object} data - The data to be updated.
+ * @param {Object} options - The Sequelize options for the update operation (e.g., `where` clause).
+ * @returns {Promise<[number, number]>} A promise that resolves to an array, where the first element
+ * represents the number of affected rows and the second element is always `undefined` (as per Sequelize's update method).
+ * @throws Will throw an error if the update operation fails.
+ */
+async function update(data, options) {
+  return modelMap.userGroupsModel.getModel().update(data, options);
+}
+
+/**
  * Module containing database operations for user-group relations.
  * @module userGroups
  */
@@ -54,4 +69,5 @@ export const userGroups = {
   bulkCreate,
   fetchAll,
   fetchOne,
+  update,
 };

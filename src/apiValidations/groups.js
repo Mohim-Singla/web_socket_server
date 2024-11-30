@@ -23,10 +23,25 @@ const createGroup = {
 };
 
 /**
+ * Validation schema for adding members to a group.
+ *
+ * @constant {Object}
+ * @property {Object} body - The schema for the request body.
+ * @property {Joi.ObjectSchema} body.members - An array of member IDs (strings), required with a minimum of one item.
+ */
+const addGroupMembers = {
+  body: Joi.object({
+    members: Joi.array().required().min(1).items(Joi.string()),
+  }),
+};
+
+/**
  * Collection of validation schemas for group-related operations.
  * @type {Object}
  * @property {Object} createGroup - Schema for validating the request body for creating a group.
+ * @property {Object} addGroupMembers - Schema for validating the request body for adding members to a group
  */
 export const groupsSchema = {
+  addGroupMembers,
   createGroup,
 };

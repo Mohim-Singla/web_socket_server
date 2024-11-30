@@ -8,6 +8,7 @@ import { controller } from '../../controller/index.js';
 import { authenticate } from '../../middleware/authenticate.js';
 import { validateRequest } from '../../middleware/requestValidator.js';
 import { JoiSchemas } from '../../apiValidations/index.js';
+import { checkUserGroupAssociation } from '../../middleware/checkUserGroupAssociation.js';
 
 const router = new express.Router();
 
@@ -74,6 +75,19 @@ router.post('/create', authenticate, validateRequest(JoiSchemas.groupsSchema.cre
  * @returns {Array<object>} res.body - An array of message objects sorted by timestamp.
  * @throws {Error} If the user is not authorized to access the group or if message retrieval fails.
  */
-router.get('/:groupId/messages', authenticate, controller.groups.fetchGroupMessages);
+router.get('/:groupId/messages', authenticate, checkUserGroupAssociation, controller.groups.fetchGroupMessages);
+
+/**
+ * Route to add members to a group.
+ *
+ * @name POST /:groupId/add/members
+ * @function
+ * @memberof module:groups
+ * @param {string} groupId - The ID of the group to which members will be added.
+ * @param {Function} controller.groups.addGroupMembers - Controller function to handle the request.
+ * @description
+ * Adds one or more members to the specified group. The `authenticate` middleware ensures the user is authenticated.
+ */
+router.post('/:groupId/add/members', authenticate, validateRequest(JoiSchemas.groupsSchema.addGroupMembers.body), checkUserGroupAssociation, controller.groups.addGroupMembers);
 
 export const groups = router;
