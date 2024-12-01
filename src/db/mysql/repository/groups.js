@@ -16,6 +16,17 @@ async function fetchAll(options) {
 }
 
 /**
+ * Fetches a single group record based on the provided options.
+ * @async
+ * @function
+ * @param {Object} options - The query options for fetching the record.
+ * @returns {Promise<Object|null>} The group record or null if not found.
+ */
+async function fetchOne(options) {
+  return modelMap.groupsModel.getModel().findOne(options);
+}
+
+/**
  * Creates a new group in the MySQL database using Sequelize.
  * This function interacts with the Sequelize model to insert a new group record into the database.
  * @async
@@ -37,4 +48,5 @@ async function create(groupData, transaction) {
 export const groups = {
   create,
   fetchAll,
+  fetchOne,
 };

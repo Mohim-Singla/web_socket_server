@@ -28,6 +28,20 @@ const router = new express.Router();
 router.get('/public', authenticate, controller.groups.fetchPublicGroups);
 
 /**
+ * Handles the route to join a public group by its ID.
+ * Validates the user's access and associates them with the group.
+ * @name POST /:groupId/public/join
+ * @function
+ * @memberof module:groups
+ * @param {Object} req - The Express request object.
+ * @param {Object} req.params - The route parameters.
+ * @param {string} req.params.groupId - The ID of the group to join.
+ * @param {Object} res - The Express response object to send the result.
+ * @returns {Promise<void>} Responds with success or error message.
+ */
+router.post('/:groupId/public/join', authenticate, controller.groups.joinGroup);
+
+/**
  * Endpoint to fetch all private groups.
  * This route is protected by authentication middleware.
  * It retrieves a list of private groups from the database.

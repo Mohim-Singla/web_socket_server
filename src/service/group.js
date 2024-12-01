@@ -21,6 +21,21 @@ async function fetchGroupsWithType(type) {
 }
 
 /**
+ * Fetches group details by its ID.
+ * @async
+ * @function
+ * @param {string} groupId - The ID of the group to fetch.
+ * @returns {Promise<Object|null>} The group details or null if not found.
+ */
+async function fetchGroupWithId(groupId) {
+  const condition = {
+    where: { groupId },
+  };
+
+  return mysqlRepository.groups.fetchOne(condition);
+}
+
+/**
  * @async
  * @function fetchGroupsData
  * @memberof module:group
@@ -71,5 +86,6 @@ async function create(params, transaction = null) {
 export const group = {
   create,
   fetchGroupsData,
+  fetchGroupWithId,
   fetchGroupsWithType,
 };

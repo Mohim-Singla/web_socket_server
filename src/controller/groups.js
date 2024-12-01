@@ -89,7 +89,7 @@ async function createGroup(req, res) {
  * Fetches messages for a group with pagination.
  * @async
  * @function fetchGroupMessages
- * @param {object} req - The HTTP request object.
+ * @param {Express.Request} req - The HTTP request object.
  * @param {object} req.params - The route parameters.
  * @param {string} req.params.groupId - The ID of the group to fetch messages for.
  * @param {object} req.query - The query parameters for pagination.
@@ -97,7 +97,7 @@ async function createGroup(req, res) {
  * @param {number|string} [req.query.offset=0] - The number of messages to skip.
  * @param {object} req.user - The authenticated user's data.
  * @param {string} req.user.userId - The ID of the authenticated user.
- * @param {object} res - The HTTP response object.
+ * @param {Express.Response} res - The HTTP response object.
  * @returns {Promise<object>} Sends a response with the fetched messages or an error message.
  */
 async function fetchGroupMessages(req, res) {
@@ -122,12 +122,12 @@ async function fetchGroupMessages(req, res) {
  *
  * @async
  * @function addGroupMembers
- * @param {Object} req - The request object.
+ * @param {Express.Request} req - The request object.
  * @param {Object} req.params - The request parameters.
  * @param {string} req.params.groupId - The ID of the group to which members are to be added.
  * @param {Object} req.body - The request body.
  * @param {Array<string>} req.body.members - An array of user IDs to be added to the group.
- * @param {Object} res - The response object.
+ * @param {Express.Response} res - The response object.
  * @returns {Promise<Object>} Response indicating success or error.
  * @throws Will return an error response if adding members fails.
  */
@@ -139,10 +139,45 @@ async function addGroupMembers(req, res) {
     await service.userGroup.createUsersAssociationWithGroup(req.body.members, groupId, transaction);
 
     await utils.common.commitTransaction(transaction);
-    return res.success('Members added to group successfully', null, 200,200);
+    return res.success('Members added to group successfully.', null, 200,200);
   } catch (error) {
     await utils.common.rollbackTransaction(transaction);
     console.error('Unable to add members to the group.', error);
+    return res.error('Something went wrong.', error.message, 500, 500);
+  }
+}
+
+/**
+ * Adds a user to a public group if it is accessible.
+ * Validates the group type and associates the user with the group.
+ * @async
+ * @function
+ * @param {Express.Request} req - The request object, containing user and group details.
+ * @param {Express.Response} res - The response object to send the result.
+ * @param {Object} req.params - The request parameters.
+ * @param {string} req.params.groupId - The ID of the group to which members are to be added.
+ * @returns {Promise<void>} Responds with success or error message.
+ */
+async function joinGroup(req, res) {
+  let transaction;
+  try {
+    const { groupId } = req.params;
+
+    const groupData = await service.group.fetchGroupWithId(groupId);
+    if (!groupData) {
+      return res.error('Invalid Input.', null, 400, 400);
+    }
+
+    if(groupData.type !== utils.constant.GROUPS.TYPES.PUBLIC) {
+      return res.error('Group not available for public access.', null, 403, 403);
+    }
+    transaction = await utils.common.fetchSqlTransactionInstance();
+    await service.userGroup.createUsersAssociationWithGroup([req.user.userId], groupId, transaction);
+    await utils.common.commitTransaction(transaction);
+    return res.success('User added to group successfully.', null, 200,200);
+  } catch (error) {
+    await utils.common.rollbackTransaction(transaction);
+    console.error('Unable to add user to the group.', error);
     return res.error('Something went wrong.', error.message, 500, 500);
   }
 }
@@ -157,4 +192,5 @@ export const groups = {
   fetchPrivateGroups,
   fetchPublicGroups,
   fetchGroupMessages,
+  joinGroup,
 };
