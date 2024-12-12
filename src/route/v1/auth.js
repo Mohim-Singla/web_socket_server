@@ -7,8 +7,15 @@ import express from 'express';
 import { JoiSchemas } from '../../apiValidations/index.js';
 import { validateRequest } from '../../middleware/requestValidator.js';
 import { controller } from '../../controller/index.js';
+import { authenticate } from '../../middleware/authenticate.js';
 
 const router = new express.Router();
+
+/**
+ * GET Validate token
+ * @summary Validates user authentication token
+ */
+router.get('/validate-token' , authenticate, controller.auth.returnSuccess);
 
 /**
  * POST /signup

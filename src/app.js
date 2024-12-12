@@ -4,6 +4,7 @@ import { serviceConfig } from './config/index.js';
 serviceConfig;
 import express from 'express';
 import http from 'http';
+import cors from 'cors';
 import { socketConnection } from './socket.js';
 import { routeMap } from './route/index.js';
 import { responseHandler } from './middleware/responseHandler.js';
@@ -17,6 +18,11 @@ const PORT = process.env.PORT || 3000;
 
 async function main() {
   try {
+    app.use(cors({
+      origin: 'http://localhost:3000',
+      methods: ['GET', 'POST', 'PUT', 'DELETE'],
+      allowedHeaders: ['Content-Type', 'Authorization'],
+    }));
     app.use(express.json({ limit: '60mb', extended: true }));
     app.use(express.urlencoded({ extended: true }));
     app.use(debugLogger);

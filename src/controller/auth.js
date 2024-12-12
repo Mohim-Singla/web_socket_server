@@ -75,7 +75,20 @@ async function login(req, res) {
   }
 }
 
+/**
+ * Sends a success response with the specified parameters.
+ * @async
+ * @function returnSuccess
+ * @param {Object} req - The HTTP request object.
+ * @param {Object} res - The HTTP response object, which includes a `success` method.
+ * @returns {Promise<void>} Resolves with a success response.
+ */
+async function returnSuccess(req, res) {
+  return res.success('OK', null, 200, 200);
+}
+
 export const auth = {
-  signup,
   login,
+  returnSuccess,
+  signup,
 };
